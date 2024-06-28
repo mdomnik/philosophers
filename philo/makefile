@@ -6,7 +6,7 @@
 #    By: mdomnik <mdomnik@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/21 15:38:39 by mdomnik           #+#    #+#              #
-#    Updated: 2024/05/21 18:57:07 by mdomnik          ###   ########.fr        #
+#    Updated: 2024/06/28 17:57:53 by mdomnik          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,9 @@ CC      =   cc
 
 CFLAGS  =   -Wall -Werror -Wextra -g
 
-SRCS    =   src/main.c \
+SRCS    =   src/init.c \
+			src/routine.c \
+			src/main.c \
 			src/testing.c \
 			src/utils/ft_atoi_philo.c \
 			src/utils/error_free.c \

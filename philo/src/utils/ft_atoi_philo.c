@@ -6,11 +6,13 @@
 /*   By: mdomnik <mdomnik@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 16:55:31 by mdomnik           #+#    #+#             */
-/*   Updated: 2024/05/21 17:09:23 by mdomnik          ###   ########.fr       */
+/*   Updated: 2024/06/28 17:10:15 by mdomnik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/philo.h"
+
+static int	ft_isspace_philo(int c);
 
 int	ft_atoi_philo(const char *str, int is_num_eat)
 {
@@ -45,7 +47,7 @@ int	ft_atoi_philo(const char *str, int is_num_eat)
 	return ((int)result);
 }
 
-int	ft_isspace_philo(int c)
+static int	ft_isspace_philo(int c)
 {
 	if ((c >= 9 && c <= 13) || c == 32)
 		return (1);

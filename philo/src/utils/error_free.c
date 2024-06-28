@@ -1,18 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error.c                                            :+:      :+:    :+:   */
+/*   error_free.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mdomnik <mdomnik@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 18:37:55 by mdomnik           #+#    #+#             */
-/*   Updated: 2024/05/21 18:52:17 by mdomnik          ###   ########.fr       */
+/*   Updated: 2024/06/28 17:47:58 by mdomnik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/philo.h"
 
-int	ft_strlen(const char *s)
+static int	ft_strlen(const char *s);
+
+int error_philo(char *message)
+{
+	write(STDERR_FILENO, message, ft_strlen(message));
+	return (EXIT_FAILURE);
+}
+static int	ft_strlen(const char *s)
 {
 	int	i;
 
@@ -24,8 +31,22 @@ int	ft_strlen(const char *s)
 	return (i);
 }
 
-int error_philo(char *message)
+int	free_args(t_args *args)
 {
-	write(STDERR_FILENO, message, ft_strlen(message));
-	return (EXIT_FAILURE);
+	int i;
+
+	i = -1;
+	if (args->fork_locks)
+	{
+		while (i < args->num_philo)
+		{
+				pthread_mutex_destroy(args->philo[i].left_fork);
+			i++;
+		}
+	}
+	if (args->fork_locks)
+		free(args->fork_locks);
+	if (args->philo)
+		free(args->philo);
+	return (EXIT_SUCCESS);
 }
