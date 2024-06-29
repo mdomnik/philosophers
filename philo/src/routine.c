@@ -6,53 +6,57 @@
 /*   By: mdomnik <mdomnik@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 17:57:38 by mdomnik           #+#    #+#             */
-/*   Updated: 2024/06/28 19:01:11 by mdomnik          ###   ########.fr       */
+/*   Updated: 2024/06/29 18:18:49 by mdomnik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philo.h"
 
-long	get_time_diff(struct timeval time);
-void	lock_forks(t_philo *philo);
-void	unlock_forks(t_philo *philo);
-void	*routine(t_args *args, int i ,struct timeval time);
-
-
 void	table_routine(t_args *args)
 {
-	struct	timeval	time;
-
-	gettimeofday(&time, NULL);
-	while (args->philo_dead == 0)
+	int i;
+	int	ret;
+	
+	i = 0;
+	ret = 0;
+	while (i < args->num_philo)
 	{
-		int i;
-		
-		i = 0;
-		while (i < args->num_philo)
-		{
-			pthread_create(args->philo[i].thread, NULL, routine(args, i ,time), NULL);
-			i++;
-		}
+		ret = pthread_create(&args->philo[i].thread, NULL, philosopher_thread, &args->philo[i]);
+		if (ret != 0)
+			error_philo(ERR_THREAD);
+		i++;
+	}
+	i = 0;
+	while (i < args->num_philo)
+	{
+		pthread_join(args->philo[i].thread, NULL);
+		i++;
 	}
 }
 
-void	*routine(t_args *args, int i , struct timeval time)
+void	*philosopher_thread(void *arg)
 {
-	if (get_time_diff(time) - args->philo[i].time_last_meal > args->time_to_die)
+	t_philo			*philo;
+	t_args			*args;
+	long			time_diff;
+	struct	timeval	time;
+
+	philo = (t_philo *)arg;
+	args = philo->args;
+	gettimeofday(&time, NULL);
+
+	while (args->philo_dead == 0)
 	{
-		args->philo_dead = 1;
-		printf("%ld %d died\n", get_time_diff(time), args->philo[i].philo_ID);
+		time_diff = get_time_diff(time) - philo->time_last_meal;
+		printf("time_diff: %ld, philo: %d\n", time_diff, philo->philo_ID);
+		if (time_diff > philo->args->time_to_die)
+			philo_is_dead(philo, time);
+		if (philo_is_eating(philo, time) == 0)
+		{
+			philo_is_sleeping(philo, time);
+			philo_is_thinking(philo, time);
+		}
 	}
-	lock_forks(&args->philo[i]);
-	args->philo[i].is_eating = 1;
-	args->philo[i].time_last_meal = get_time_diff(time);
-	printf("%ld %d is eating\n", get_time_diff(time), args->philo[i].philo_ID);
-	usleep(args->time_to_eat * 1000);
-	args->philo[i].is_eating = 0;
-	unlock_forks(&args->philo[i]);
-	printf("%ld %d is sleeping\n", get_time_diff(time), args->philo[i].philo_ID);
-	usleep(args->time_to_sleep * 1000);
-	printf("%ld %d is thinking\n", get_time_diff(time), args->philo[i].philo_ID);
 	return (NULL);
 }
 
@@ -64,10 +68,22 @@ long	get_time_diff(struct timeval time)
 	return ((current_time.tv_sec - time.tv_sec) * 1000 + (current_time.tv_usec - time.tv_usec) / 1000);
 }
 
-void	lock_forks(t_philo *philo)
+int		lock_forks(t_philo *philo)
 {
-	pthread_mutex_lock(philo->left_fork);
-	pthread_mutex_lock(philo->right_fork);
+	if (philo->left_fork == philo->right_fork)
+		return (1);
+	if (philo->philo_ID % 2 == 0)
+	{
+		pthread_mutex_lock(philo->right_fork);
+		pthread_mutex_lock(philo->left_fork);
+		return (0);
+	}
+	else
+	{
+		pthread_mutex_lock(philo->left_fork);
+		pthread_mutex_lock(philo->right_fork);
+		return (0);
+	}
 }
 
 void	unlock_forks(t_philo *philo)

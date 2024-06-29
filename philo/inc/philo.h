@@ -6,7 +6,7 @@
 /*   By: mdomnik <mdomnik@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 15:40:35 by mdomnik           #+#    #+#             */
-/*   Updated: 2024/06/28 18:52:53 by mdomnik          ###   ########.fr       */
+/*   Updated: 2024/06/29 17:03:41 by mdomnik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 #define ERR_MUTEX_INIT "Error: mutex initialization failed\n"
 #define ERR_NUM "Error: invalid argument\n"
 #define ERR_MALLOC "Error: malloc failed\n"
+#define ERR_THREAD "Error: thread creation failed\n"
 
 typedef struct s_philo
 {
@@ -34,7 +35,7 @@ typedef struct s_philo
 	int		meals_count;
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*right_fork;
-	pthread_t 		*thread;
+	pthread_t 		thread;
 	struct s_args			*args;
 }				t_philo;
 typedef struct s_args
@@ -60,6 +61,16 @@ int		init_philo(t_args *args);
 
 //routine.c
 void	table_routine(t_args *args);
+void	*philosopher_thread(void *arg);
+long	get_time_diff(struct timeval time);
+int		lock_forks(t_philo *philo);
+void	unlock_forks(t_philo *philo);
+
+//state_change.c
+int		philo_is_eating(t_philo *philo, struct timeval time);
+void	philo_is_sleeping(t_philo *philo, struct timeval time);
+void	philo_is_thinking(t_philo *philo, struct timeval time);
+void	philo_is_dead(t_philo *philo, struct timeval time);
 
 // testing.c
 void print_philo(t_args philo);

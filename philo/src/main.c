@@ -6,7 +6,7 @@
 /*   By: mdomnik <mdomnik@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 15:44:22 by mdomnik           #+#    #+#             */
-/*   Updated: 2024/06/28 18:23:38 by mdomnik          ###   ########.fr       */
+/*   Updated: 2024/06/29 17:05:12 by mdomnik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,6 @@ int	main(int argc, char **argv)
 		return (1);
 	}
 	table_routine(&args);
-	print_philo(args);
+	// print_philo(args);
 	return (0);
 }
