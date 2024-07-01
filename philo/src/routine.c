@@ -6,7 +6,7 @@
 /*   By: mdomnik <mdomnik@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 17:57:38 by mdomnik           #+#    #+#             */
-/*   Updated: 2024/06/29 18:18:49 by mdomnik          ###   ########.fr       */
+/*   Updated: 2024/07/01 18:10:15 by mdomnik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,34 +38,38 @@ void	*philosopher_thread(void *arg)
 {
 	t_philo			*philo;
 	t_args			*args;
-	long			time_diff;
-	struct	timeval	time;
 
 	philo = (t_philo *)arg;
 	args = philo->args;
-	gettimeofday(&time, NULL);
 
 	while (args->philo_dead == 0)
 	{
-		time_diff = get_time_diff(time) - philo->time_last_meal;
-		printf("time_diff: %ld, philo: %d\n", time_diff, philo->philo_ID);
-		if (time_diff > philo->args->time_to_die)
-			philo_is_dead(philo, time);
-		if (philo_is_eating(philo, time) == 0)
+		if (args->num_eat != -1 && philo->meals_count >= args->num_eat)
+			break ;
+		if (philo_is_eating(philo) == 0)
 		{
-			philo_is_sleeping(philo, time);
-			philo_is_thinking(philo, time);
+			philo_is_sleeping(philo);
+			philo_is_thinking(philo);
 		}
+		// else
+		// 	if (get_time_diff(time) - philo->time_last_meal > philo->args->time_to_die)
+		// 		philo_is_dead(philo, time);
+		if (philo->args->philo_dead == 1)
+			break ;
 	}
 	return (NULL);
 }
 
-long	get_time_diff(struct timeval time)
+long	get_time_diff(t_args *args)
 {
 	struct timeval	current_time;
+	long			current_time_ms;
+	long			ret;
 
 	gettimeofday(&current_time, NULL);
-	return ((current_time.tv_sec - time.tv_sec) * 1000 + (current_time.tv_usec - time.tv_usec) / 1000);
+	current_time_ms = (current_time.tv_sec * 1000 + current_time.tv_usec / 1000);
+	ret = current_time_ms - args->start_time;
+	return (ret);
 }
 
 int		lock_forks(t_philo *philo)
@@ -76,14 +80,13 @@ int		lock_forks(t_philo *philo)
 	{
 		pthread_mutex_lock(philo->right_fork);
 		pthread_mutex_lock(philo->left_fork);
-		return (0);
 	}
 	else
 	{
 		pthread_mutex_lock(philo->left_fork);
 		pthread_mutex_lock(philo->right_fork);
-		return (0);
 	}
+	return (0);
 }
 
 void	unlock_forks(t_philo *philo)

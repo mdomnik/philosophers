@@ -6,7 +6,7 @@
 #    By: mdomnik <mdomnik@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/21 15:38:39 by mdomnik           #+#    #+#              #
-#    Updated: 2024/06/29 16:21:47 by mdomnik          ###   ########.fr        #
+#    Updated: 2024/07/01 17:05:10 by mdomnik          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ SRCS    =   src/init.c \
 			src/routine.c \
 			src/state_change.c \
 			src/main.c \
+			src/monitoring.c \
 			src/testing.c \
 			src/utils/ft_atoi_philo.c \
 			src/utils/error_free.c \

@@ -6,7 +6,7 @@
 /*   By: mdomnik <mdomnik@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 16:51:47 by mdomnik           #+#    #+#             */
-/*   Updated: 2024/06/29 16:50:07 by mdomnik          ###   ########.fr       */
+/*   Updated: 2024/07/01 18:09:34 by mdomnik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,23 @@
  */
 int init_args(t_args *args, char **argv)
 {
-	args->num_philo = ft_atoi_philo(argv[1], 0);
-	args->time_to_die = ft_atoi_philo(argv[2], 0);
-	args->time_to_eat = ft_atoi_philo(argv[3], 0);
-	args->time_to_sleep = ft_atoi_philo(argv[4], 0);
+	struct timeval time;
+
+	gettimeofday(&time, NULL);
+	args->num_philo = ft_atoi_philo(argv[1]);
+	args->time_to_die = ft_atoi_philo(argv[2]);
+	args->time_to_eat = ft_atoi_philo(argv[3]);
+	args->time_to_sleep = ft_atoi_philo(argv[4]);
 	if (argv[5])
-		args->num_eat = ft_atoi_philo(argv[5], 1);
+		args->num_eat = ft_atoi_philo(argv[5]);
 	else
 		args->num_eat = -1;
 	args->philo_dead = 0;
+	args->terminate = 0;
+	args->start_time = time.tv_sec * 1000 + time.tv_usec / 1000;
 	if (init_fork_locks(args) == 1)
+		return (1);
+	if (init_monitoring_thread(args) == 1)
 		return (1);
 	if (init_philo(args) == 1)
 		return (1);
@@ -51,6 +58,13 @@ int	init_fork_locks(t_args *args)
 			error_philo(ERR_MUTEX_INIT);
 		i++;
 	}
+	return (0);
+}
+
+int	init_monitoring_thread(t_args *args)
+{
+	if (pthread_mutex_init(&args->monitoring, NULL) != 0)
+		error_philo(ERR_MUTEX_INIT);
 	return (0);
 }
 
