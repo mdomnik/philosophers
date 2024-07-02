@@ -6,7 +6,7 @@
 /*   By: mdomnik <mdomnik@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 16:55:31 by mdomnik           #+#    #+#             */
-/*   Updated: 2024/07/01 16:55:07 by mdomnik          ###   ########.fr       */
+/*   Updated: 2024/07/02 16:23:14 by mdomnik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,11 @@
 
 static int	ft_isspace_philo(int c);
 
-int	ft_atoi_philo(const char *str)
+int	ft_atoi_philo(const char *str, long i)
 {
-	long	i;
 	long	sign;
 	long	result;
 
-	i = 0;
 	sign = 1;
 	result = 0;
 	while (ft_isspace_philo(str[i]) == 1)
@@ -39,11 +37,8 @@ int	ft_atoi_philo(const char *str)
 		i++;
 	}
 	result = result * sign;
-	if (result > 2147483647 || result < -2147483648 || str[i] != '\0' || result < 1)
-	{
+	if (result > INT_MAX || result < INT_MIN || str[i] != '\0' || result < 1)
 		error_philo(ERR_NUM);
-		exit(1);
-	}
 	return ((int)result);
 }
 

@@ -1,40 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error_free.c                                       :+:      :+:    :+:   */
+/*   ft_usleep.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mdomnik <mdomnik@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/21 18:37:55 by mdomnik           #+#    #+#             */
-/*   Updated: 2024/07/02 17:22:48 by mdomnik          ###   ########.fr       */
+/*   Created: 2024/07/02 15:57:06 by mdomnik           #+#    #+#             */
+/*   Updated: 2024/07/02 17:03:37 by mdomnik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/philo.h"
 
-static int	ft_strlen(const char *s);
-
-int	error_philo(char *message)
+void	ft_usleep(long time)
 {
-	write(STDERR_FILENO, message, ft_strlen(message));
-	exit(EXIT_FAILURE);
+	long	start_time;
+
+	start_time = 0;
+	start_time = current_time();
+	while ((current_time() - start_time) < time)
+		usleep(time / 10);
 }
 
-static int	ft_strlen(const char *s)
+long	current_time(void)
 {
-	int	i;
+	long int			time;
+	struct timeval		current_time;
 
-	i = 0;
-	while (s[i])
-	{
-		i++;
-	}
-	return (i);
-}
-
-int	free_args(t_args *args)
-{
-	free(args->philo);
-	free(args->fork_locks);
-	return (EXIT_SUCCESS);
+	time = 0;
+	gettimeofday(&current_time, NULL);
+	time = (current_time.tv_sec * 1000) + (current_time.tv_usec / 1000);
+	return (time);
 }
