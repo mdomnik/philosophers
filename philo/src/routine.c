@@ -6,7 +6,7 @@
 /*   By: mdomnik <mdomnik@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 17:57:38 by mdomnik           #+#    #+#             */
-/*   Updated: 2024/07/01 18:10:15 by mdomnik          ###   ########.fr       */
+/*   Updated: 2024/07/02 15:00:09 by mdomnik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	*philosopher_thread(void *arg)
 	philo = (t_philo *)arg;
 	args = philo->args;
 
-	while (args->philo_dead == 0)
+	while (philo->args->philo_dead == 0)
 	{
 		if (args->num_eat != -1 && philo->meals_count >= args->num_eat)
 			break ;
@@ -51,11 +51,6 @@ void	*philosopher_thread(void *arg)
 			philo_is_sleeping(philo);
 			philo_is_thinking(philo);
 		}
-		// else
-		// 	if (get_time_diff(time) - philo->time_last_meal > philo->args->time_to_die)
-		// 		philo_is_dead(philo, time);
-		if (philo->args->philo_dead == 1)
-			break ;
 	}
 	return (NULL);
 }
@@ -79,14 +74,18 @@ int		lock_forks(t_philo *philo)
 	if (philo->philo_ID % 2 == 0)
 	{
 		pthread_mutex_lock(philo->right_fork);
+		monitoring_status(philo, S_FORK);
 		pthread_mutex_lock(philo->left_fork);
+		monitoring_status(philo, S_FORK);
 	}
 	else
 	{
 		pthread_mutex_lock(philo->left_fork);
+		monitoring_status(philo, S_FORK);
 		pthread_mutex_lock(philo->right_fork);
+		monitoring_status(philo, S_FORK);
 	}
-	return (0);
+		return (0);
 }
 
 void	unlock_forks(t_philo *philo)

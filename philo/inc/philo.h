@@ -6,7 +6,7 @@
 /*   By: mdomnik <mdomnik@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 15:40:35 by mdomnik           #+#    #+#             */
-/*   Updated: 2024/07/01 17:59:58 by mdomnik          ###   ########.fr       */
+/*   Updated: 2024/07/02 14:06:32 by mdomnik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 #define ERR_MALLOC "Error: malloc failed\n"
 #define ERR_THREAD "Error: thread creation failed\n"
 
+#define FORK "has taken a fork"
 #define EAT "is eating"
 #define SLEEP "is sleeping"
 #define THINK "is thinking"
@@ -34,6 +35,7 @@
 
 typedef enum e_status
 {
+	S_FORK,
 	S_EAT,
 	S_SLEEP,
 	S_THINK,
@@ -64,8 +66,8 @@ typedef struct s_args
 	int time_to_sleep;
 	int num_eat;
 	int philo_dead;
-	int			terminate;
 
+	int lowest_meal_count;
 	t_philo 		*philo;
 	pthread_mutex_t	monitoring;
 	pthread_mutex_t *fork_locks;
@@ -80,6 +82,7 @@ int		init_philo(t_args *args);
 
 //monitoring.c
 void	monitoring_status(t_philo *philo, int status);
+int 	find_lowest_meal_count(t_args *args);
 
 //routine.c
 void	table_routine(t_args *args);

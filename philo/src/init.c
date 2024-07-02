@@ -6,7 +6,7 @@
 /*   By: mdomnik <mdomnik@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 16:51:47 by mdomnik           #+#    #+#             */
-/*   Updated: 2024/07/01 18:09:34 by mdomnik          ###   ########.fr       */
+/*   Updated: 2024/07/02 14:01:53 by mdomnik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ int init_args(t_args *args, char **argv)
 	else
 		args->num_eat = -1;
 	args->philo_dead = 0;
-	args->terminate = 0;
 	args->start_time = time.tv_sec * 1000 + time.tv_usec / 1000;
+	args->lowest_meal_count = 0;
 	if (init_fork_locks(args) == 1)
 		return (1);
 	if (init_monitoring_thread(args) == 1)
