@@ -6,7 +6,7 @@
 /*   By: mdomnik <mdomnik@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 17:04:54 by mdomnik           #+#    #+#             */
-/*   Updated: 2024/07/02 14:23:33 by mdomnik          ###   ########.fr       */
+/*   Updated: 2024/07/02 15:38:48 by mdomnik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	monitoring_status(t_philo *philo, int status)
 	}
 	else
 	{
-		printf("[%ld] ", get_time_diff(philo->args));
+		printf("%ld ", get_time_diff(philo->args));
 		printf("%d %s\n", philo->philo_ID, status_msg[status]);
 		pthread_mutex_unlock(&philo->args->monitoring);
 	}

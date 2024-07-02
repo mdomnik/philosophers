@@ -6,7 +6,7 @@
 /*   By: mdomnik <mdomnik@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 17:57:38 by mdomnik           #+#    #+#             */
-/*   Updated: 2024/07/02 15:00:09 by mdomnik          ###   ########.fr       */
+/*   Updated: 2024/07/02 15:23:05 by mdomnik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ void	*philosopher_thread(void *arg)
 	philo = (t_philo *)arg;
 	args = philo->args;
 
+	if (philo->philo_ID % 2 == 0)
+		usleep(100);
 	while (philo->args->philo_dead == 0)
 	{
 		if (args->num_eat != -1 && philo->meals_count >= args->num_eat)
