@@ -6,7 +6,7 @@
 /*   By: mdomnik <mdomnik@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 17:57:38 by mdomnik           #+#    #+#             */
-/*   Updated: 2024/07/03 15:44:57 by mdomnik          ###   ########.fr       */
+/*   Updated: 2024/07/03 19:12:02 by mdomnik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,17 +43,22 @@ void	*philosopher_thread(void *arg)
 	philo = (t_philo *)arg;
 	args = philo->args;
 	if (philo->philo_id % 2 == 0)
-		ft_usleep(100);
+		ft_usleep(1);
 	while (philo->local_philo_dead == 0)
 	{
 		get_race_values(philo, 0);
+		meal_race_value(philo);
 		if (args->num_eat != -1 && philo->meals_count >= args->num_eat)
 			break ;
 		if (philo_is_eating(philo) == 0)
 		{
+			if (args->num_eat != -1 && philo->meals_count >= args->num_eat)
+				break ;
 			philo_is_sleeping(philo);
 			monitoring_status(philo, S_THINK);
+			usleep(1);
 		}
+		usleep(1);
 	}
 	return (NULL);
 }
@@ -81,4 +86,15 @@ void	get_race_values(t_philo *philo, int status)
 		args->philo_dead = 1;
 	philo->local_philo_dead = args->philo_dead;
 	pthread_mutex_unlock(&args->monitoring);
+}
+
+void	meal_race_value(t_philo *philo)
+{
+	t_args	*args;
+
+	args = philo->args;
+	pthread_mutex_lock(&args->philo_meal_mutex);
+	args->lowest_meal_count = find_lowest_meal_count(args);
+	philo->local_lowest_meal = args->lowest_meal_count;
+	pthread_mutex_unlock(&args->philo_meal_mutex);
 }

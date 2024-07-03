@@ -6,7 +6,7 @@
 /*   By: mdomnik <mdomnik@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 17:04:54 by mdomnik           #+#    #+#             */
-/*   Updated: 2024/07/03 15:40:22 by mdomnik          ###   ########.fr       */
+/*   Updated: 2024/07/03 19:08:58 by mdomnik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,4 +23,20 @@ void	monitoring_status(t_philo *philo, int status)
 		printf("%d %s\n", philo->philo_id, status_msg[status]);
 	}
 	pthread_mutex_unlock(&philo->args->monitoring);
+}
+
+int	find_lowest_meal_count(t_args *args)
+{
+	int	i;
+	int	lowest;
+
+	i = 0;
+	lowest = INT_MAX;
+	while (i < args->num_philo)
+	{
+		if (args->philo[i].meals_count < lowest)
+			lowest = args->philo[i].meals_count;
+		i++;
+	}
+	return (lowest);
 }

@@ -6,7 +6,7 @@
 /*   By: mdomnik <mdomnik@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 16:51:47 by mdomnik           #+#    #+#             */
-/*   Updated: 2024/07/03 15:43:48 by mdomnik          ###   ########.fr       */
+/*   Updated: 2024/07/03 16:29:12 by mdomnik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int	init_args(t_args *args, char **argv)
 		args->num_eat = -1;
 	args->philo_dead = 0;
 	args->start_time = time.tv_sec * 1000 + time.tv_usec / 1000;
+	args->lowest_meal_count = 0;
 	if (init_fork_locks(args) == 1)
 		return (1);
 	if (init_monitoring_thread(args) == 1)
@@ -58,7 +59,7 @@ int	init_monitoring_thread(t_args *args)
 {
 	if (pthread_mutex_init(&args->monitoring, NULL) != 0)
 		error_philo(ERR_MUTEX_INIT);
-	if (pthread_mutex_init(&args->philo_data_race_mutex, NULL) != 0)
+	if (pthread_mutex_init(&args->philo_meal_mutex, NULL) != 0)
 		error_philo(ERR_MUTEX_INIT);
 	return (0);
 }
@@ -78,6 +79,7 @@ int	init_philo(t_args *args)
 		args->philo[i].is_eating = 0;
 		args->philo[i].meals_count = 0;
 		args->philo[i].local_philo_dead = 0;
+		args->philo[i].local_lowest_meal = 0;
 		args->philo[i].args = args;
 		args->philo[i].left_fork = &args->fork_locks[i];
 		args->philo[i].right_fork
