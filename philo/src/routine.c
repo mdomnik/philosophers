@@ -6,7 +6,7 @@
 /*   By: mdomnik <mdomnik@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 17:57:38 by mdomnik           #+#    #+#             */
-/*   Updated: 2024/07/02 18:51:20 by mdomnik          ###   ########.fr       */
+/*   Updated: 2024/07/03 15:44:57 by mdomnik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,19 +39,14 @@ void	*philosopher_thread(void *arg)
 {
 	t_philo			*philo;
 	t_args			*args;
-	int				philo_dead;
 
 	philo = (t_philo *)arg;
 	args = philo->args;
 	if (philo->philo_id % 2 == 0)
 		ft_usleep(100);
-	while (1)
+	while (philo->local_philo_dead == 0)
 	{
-		pthread_mutex_lock(&args->philo_dead_mutex);
-		philo_dead = args->philo_dead;
-		pthread_mutex_unlock(&args->philo_dead_mutex);
-		if (philo_dead == 1)
-			break ;
+		get_race_values(philo, 0);
 		if (args->num_eat != -1 && philo->meals_count >= args->num_eat)
 			break ;
 		if (philo_is_eating(philo) == 0)
@@ -74,4 +69,16 @@ long	get_time_diff(t_args *args)
 		= (current_time.tv_sec * 1000 + current_time.tv_usec / 1000);
 	ret = current_time_ms - args->start_time;
 	return (ret);
+}
+
+void	get_race_values(t_philo *philo, int status)
+{
+	t_args	*args;
+
+	args = philo->args;
+	pthread_mutex_lock(&args->monitoring);
+	if (status == S_DIED)
+		args->philo_dead = 1;
+	philo->local_philo_dead = args->philo_dead;
+	pthread_mutex_unlock(&args->monitoring);
 }

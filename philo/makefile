@@ -6,7 +6,7 @@
 #    By: mdomnik <mdomnik@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/21 15:38:39 by mdomnik           #+#    #+#              #
-#    Updated: 2024/07/02 17:48:55 by mdomnik          ###   ########.fr        #
+#    Updated: 2024/07/03 15:50:40 by mdomnik          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME    =   philo
 
 CC      =   cc
 
-CFLAGS  =   -Wall -Werror -Wextra -g
+CFLAGS  =   -Wall -Werror -Wextra
 
 SRCS    =   src/fork_mutex.c \
 			src/init.c \

@@ -6,7 +6,7 @@
 /*   By: mdomnik <mdomnik@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 15:40:35 by mdomnik           #+#    #+#             */
-/*   Updated: 2024/07/02 20:07:12 by mdomnik          ###   ########.fr       */
+/*   Updated: 2024/07/03 15:43:42 by mdomnik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ typedef struct s_philo
 	int				is_eating;
 	int				meals_count;
 	int				time_last_meal;
+	int				local_philo_dead;
 
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*right_fork;
@@ -65,11 +66,10 @@ typedef struct s_args
 	int				time_to_sleep;
 	int				num_eat;
 	int				philo_dead;
-	int				lowest_meal_count;
 	long			start_time;
 
 	t_philo			*philo;
-	pthread_mutex_t	philo_dead_mutex;
+	pthread_mutex_t	philo_data_race_mutex;
 	pthread_mutex_t	monitoring;
 	pthread_mutex_t	*fork_locks;
 
@@ -87,12 +87,12 @@ int		init_philo(t_args *args);
 
 //monitoring.c
 void	monitoring_status(t_philo *philo, int status);
-int		find_lowest_meal_count(t_args *args);
 
 //routine.c
 void	table_routine(t_args *args);
 void	*philosopher_thread(void *arg);
 long	get_time_diff(t_args *args);
+void	get_race_values(t_philo *philo, int status);
 
 //state_change.c
 int		philo_is_eating(t_philo *philo);

@@ -6,7 +6,7 @@
 /*   By: mdomnik <mdomnik@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:21:28 by mdomnik           #+#    #+#             */
-/*   Updated: 2024/07/02 20:06:13 by mdomnik          ###   ########.fr       */
+/*   Updated: 2024/07/03 15:40:46 by mdomnik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,7 @@ int	philo_is_eating(t_philo *philo)
 {
 	int		success;
 
-	success = -1;
-	if (philo->meals_count <= philo->args->lowest_meal_count)
-		success = lock_forks(philo);
+	success = lock_forks(philo);
 	if (success == 0)
 		return (forks_locked_lets_eat(philo));
 	else if (success == 1)
@@ -61,5 +59,5 @@ void	philo_is_dead(t_philo *philo)
 {
 	unlock_forks(philo);
 	monitoring_status(philo, S_DIED);
-	philo->args->philo_dead = 1;
+	get_race_values(philo, S_DIED);
 }
